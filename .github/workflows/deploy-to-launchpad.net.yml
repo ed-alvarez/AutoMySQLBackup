@@ -89,4 +89,4 @@ jobs:
     - name: Publishing to PPA
       run: |
         cd $GITHUB_WORKSPACE
-        dput ppa automysqlbackup_$(echo $GITHUB_REF | grep -oP "([0-9].*)" )_source.changes
+        dput ppa ../automysqlbackup_$(echo $GITHUB_REF | grep -oP "([0-9].*)" )_source.changes
