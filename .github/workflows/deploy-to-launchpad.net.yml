@@ -18,6 +18,9 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
 
+    - name: List keys
+      run: gpg -K
+
     - name: Run install commands
       run: |
         sudo apt-get install dput
