@@ -6,17 +6,22 @@ on:
 
 jobs:
   build:
-    name: Deploy PPA - ${GITHUB_REF##*/}
+    name: Packaging software
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # - name: Run install commands
-    #   run: |
-    #     sudo apt-get install dput
-    #     sudo apt-get install devscripts
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v4
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+    - name: Run install commands
+      run: |
+        sudo apt-get install dput
+        sudo apt-get install devscripts
 
     - name: Packaging software
       run: |
@@ -29,7 +34,7 @@ jobs:
         echo "3.0 (native)" >> debian/source/format
         echo "10" >> debian/compat
 
-        cat <<EOT >> debian/control
+        cat <<EOF >> debian/control
         Source: automysqlbackup
         Maintainer: sixshop <sixshop@github.com>
         Section: utils
@@ -41,20 +46,27 @@ jobs:
         Architecture: any
         Homepage: https://github.com/sixshop/automysqlbackup
         Description: A fork and further development of AutoMySQLBackup from sourceforge.
-        EOT
+        EOF
 
     - name: Creating changelog
       run: |
-        cd $GITHUB_WORKSPACE
-
-        cat <<EOT >> debian/rules
+        cat <<EOF >> debian/rules
         #!/usr/bin/make -f
 
         %:
                 dh $@
-        EOT
+        EOF
 
-        echo ${GITHUB_REF##*/}
+        cat <<EOF >> debian/changelog
+        automysqlbackup ($(echo ${GITHUB_REF} | grep "([0-9].*)")) echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"; urgency=medium
 
-    # - name: Building AutoMySQLBackup
-    #   run: debuild -us -uc
+          * ${{ github.event.head_commit.message }}
+
+         -- ${{ secrets.GPG_OWNER }}  $(date +'%a, %d %b %Y %T %z')
+        EOF
+
+    - name: Building AutoMySQLBackup
+      run: debuild -us -uc
+
+    - name: Publish to PPA
+      run: ls ../
