@@ -60,9 +60,11 @@ jobs:
 
     - name: Creating changelog
       run: |
-        echo -e '#!/usr/bin/make -f\n' >> rules
-        echo -e '%:\n'
-        echo -e '\tdh $@\n'
+        cd $GITHUB_WORKSPACE
+
+        echo -e '#!/usr/bin/make -f\n' >> debian/rules
+        echo -e '%:\n' >> debian/rules
+        echo -e '\tdh $@\n' >> debian/rules
 
         echo -e "automysqlbackup ($(echo $GITHUB_REF | grep -oP "([0-9].*)")) $(echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"); urgency=medium\n" >> debian/changelog
         echo -e "  * ${{ github.event.head_commit.message }}\n" >> debian/changelog
@@ -71,7 +73,9 @@ jobs:
         cat debian/changelog
 
     - name: Building AutoMySQLBackup
-      run: debuild -S -sa
+      run: |
+        cd $GITHUB_WORKSPACE
+        debuild -S -sa
 
     - name: Publish to PPA
       run: ls ../
