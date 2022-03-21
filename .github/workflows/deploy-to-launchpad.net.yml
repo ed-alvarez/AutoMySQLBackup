@@ -60,12 +60,9 @@ jobs:
 
     - name: Creating changelog
       run: |
-        cat <<EOT >> debian/rules
-        #!/usr/bin/make -f
-
-        %:
-                dh $@
-        EOT
+        echo -e '#!/usr/bin/make -f\n' >> rules
+        echo -e '%:\n'
+        echo -e '\tdh $@\n'
 
         echo -e "automysqlbackup ($(echo $GITHUB_REF | grep -oP "([0-9].*)")) $(echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"); urgency=medium\n" >> debian/changelog
         echo -e "  * ${{ github.event.head_commit.message }}\n" >> debian/changelog
