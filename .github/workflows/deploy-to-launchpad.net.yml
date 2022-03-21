@@ -26,10 +26,6 @@ jobs:
 
         cp install.sh debian/postinst
 
-        touch debian/source/format
-        touch debian/compat
-        touch debian/control
-
         echo "3.0 (native)" >> debian/source/format
         echo "10" >> debian/compat
 
@@ -49,10 +45,7 @@ jobs:
 
     - name: Creating changelog
       run: |
-        cd $GITHUB_WORKSPACE/debian
-
-        touch rules
-        touch changelog
+        cd $GITHUB_WORKSPACE
 
         cat <<EOT >> debian/rules
         #!/usr/bin/make -f
