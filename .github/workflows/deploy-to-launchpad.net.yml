@@ -18,6 +18,15 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.GPG_SIGNING_KEY }}
 
+    - name: Trust key
+      run: |
+        gpg --command-fd 0 --edit-key ${{ secrets.GPG_KEY_ID }} <<EOTRUST
+        trust
+        5
+        y
+        quit
+        EOTRUST
+
     - name: List keys
       run: gpg -K
 
