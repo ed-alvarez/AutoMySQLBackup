@@ -1,0 +1,67 @@
+name: Deploy to launchpad.net
+
+on:
+  push:
+    branches: 'ubuntu-impish-*'
+
+jobs:
+  build:
+    name: Deploy PPA - ${GITHUB_REF##*/}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # - name: Run install commands
+    #   run: |
+    #     sudo apt-get install dput
+    #     sudo apt-get install devscripts
+
+    - name: Packaging software
+      run: |
+        cd $GITHUB_WORKSPACE
+        mkdir debian
+        mkdir debian/source
+
+        cp install.sh debian/postinst
+
+        touch debian/source/format
+        touch debian/compat
+        touch debian/control
+
+        echo "3.0 (native)" >> debian/source/format
+        echo "10" >> debian/compat
+
+        cat <<EOT >> debian/control
+        Source: automysqlbackup
+        Maintainer: sixshop <sixshop@github.com>
+        Section: utils
+        Priority: important
+        Build-Depends: debhelper (>= 10)
+        Standards-Version: 4.5.1
+
+        Package: automysqlbackup
+        Architecture: any
+        Homepage: https://github.com/sixshop/automysqlbackup
+        Description: A fork and further development of AutoMySQLBackup from sourceforge.
+        EOT
+
+    - name: Creating changelog
+      run: |
+        cd $GITHUB_WORKSPACE/debian
+
+        touch rules
+        touch changelog
+
+        cat <<EOT >> debian/rules
+        #!/usr/bin/make -f
+
+        %:
+                dh $@
+        EOT
+
+        echo ${GITHUB_REF##*/}
+
+    # - name: Building AutoMySQLBackup
+    #   run: debuild -us -uc
