@@ -37,7 +37,7 @@ jobs:
         echo "3.0 (native)" >> debian/source/format
         echo "10" >> debian/compat
 
-        cat <<EOF >> debian/control
+        cat <<EOT >> debian/control
         Source: automysqlbackup
         Maintainer: sixshop <sixshop@github.com>
         Section: utils
@@ -49,24 +49,24 @@ jobs:
         Architecture: any
         Homepage: https://github.com/sixshop/automysqlbackup
         Description: A fork and further development of AutoMySQLBackup from sourceforge.
-        EOF
+        EOT
 
     - name: Creating changelog
       run: |
-        cat <<EOF >> debian/rules
+        cat <<EOT >> debian/rules
         #!/usr/bin/make -f
 
         %:
                 dh $@
-        EOF
+        EOT
 
-        cat <<EOF >> debian/changelog
+        cat <<EOT >> debian/changelog
         automysqlbackup ($(echo ${GITHUB_REF} | grep "([0-9].*)")) echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"; urgency=medium
 
           * ${{ github.event.head_commit.message }}
 
          -- ${{ secrets.GPG_OWNER }}  $(date +'%a, %d %b %Y %T %z')
-        EOF
+        EOT
 
     - name: Building AutoMySQLBackup
       run: debuild -us -uc
