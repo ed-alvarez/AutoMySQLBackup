@@ -31,9 +31,7 @@ jobs:
       run: gpg -K
 
     - name: Run install commands
-      run: |
-        sudo apt-get install dput
-        sudo apt-get install devscripts
+      run: sudo apt-get install dput devscripts debhelper
 
     - name: Packaging software
       run: |
