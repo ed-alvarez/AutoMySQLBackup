@@ -62,9 +62,9 @@ jobs:
 
         echo -e "automysqlbackup ($(echo ${GITHUB_REF} | grep "([0-9].*)")) $(echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"); urgency=medium\n" >> debian/changelog
         echo -e "  * ${{ github.event.head_commit.message }}\n" >> debian/changelog
-        echo " -- ${{ secrets.GPG_OWNER }}  $(date +'%a, %d %b %Y %T %z')"
+        echo " -- ${{ secrets.GPG_OWNER }}  $(date +'%a, %d %b %Y %T %z')" >> debian/changelog
 
-        cat changelog
+        cat debian/changelog
 
     # - name: Building AutoMySQLBackup
     #   run: debuild -us -uc
