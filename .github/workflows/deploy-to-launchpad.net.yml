@@ -21,10 +21,10 @@ jobs:
     - name: List keys
       run: gpg -K
 
-    - name: Run install commands
-      run: |
-        sudo apt-get install dput
-        sudo apt-get install devscripts
+    # - name: Run install commands
+    #   run: |
+    #     sudo apt-get install dput
+    #     sudo apt-get install devscripts
 
     - name: Packaging software
       run: |
@@ -60,16 +60,12 @@ jobs:
                 dh $@
         EOT
 
-        cat <<EOT >> debian/changelog
-        automysqlbackup ($(echo ${GITHUB_REF} | grep "([0-9].*)")) echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"; urgency=medium
+        echo -e "automysqlbackup ($(echo ${GITHUB_REF} | grep "([0-9].*)")) $(echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"); urgency=medium\n" >> debian/changelog
+        echo -e "  * ${{ github.event.head_commit.message }}\n" >> debian/changelog
+        echo " -- ${{ secrets.GPG_OWNER }}  $(date +'%a, %d %b %Y %T %z')"
 
-          * ${{ github.event.head_commit.message }}
-
-         -- ${{ secrets.GPG_OWNER }}  $(date +'%a, %d %b %Y %T %z')
-        EOT
-
-    - name: Building AutoMySQLBackup
-      run: debuild -us -uc
+    # - name: Building AutoMySQLBackup
+    #   run: debuild -us -uc
 
     - name: Publish to PPA
       run: ls ../
