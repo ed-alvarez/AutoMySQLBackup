@@ -20,7 +20,7 @@ jobs:
 
     - name: Trust key
       run: |
-        gpg --command-fd 0 --edit-key ${{ secrets.GPG_KEY_ID }} <<EOTRUST
+        gpg --no-tty --command-fd 0 --edit-key ${{ secrets.GPG_KEY_ID }} <<EOTRUST
         trust
         5
         y
