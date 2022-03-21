@@ -60,7 +60,7 @@ jobs:
                 dh $@
         EOT
 
-        echo -e "automysqlbackup ($(echo $GITHUB_REF | grep "([0-9].*)")) $(echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"); urgency=medium\n" >> debian/changelog
+        echo -e "automysqlbackup ($(echo $GITHUB_REF | grep -oP "([0-9].*)")) $(echo $GITHUB_REF | grep -oP "(?<=\-).*(?=\-)"); urgency=medium\n" >> debian/changelog
         echo -e "  * ${{ github.event.head_commit.message }}\n" >> debian/changelog
         echo " -- ${{ secrets.GPG_OWNER }}  $(date +'%a, %d %b %Y %T %z')" >> debian/changelog
 
