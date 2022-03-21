@@ -30,10 +30,10 @@ jobs:
     - name: List keys
       run: gpg -K
 
-    # - name: Run install commands
-    #   run: |
-    #     sudo apt-get install dput
-    #     sudo apt-get install devscripts
+    - name: Run install commands
+      run: |
+        sudo apt-get install dput
+        sudo apt-get install devscripts
 
     - name: Packaging software
       run: |
@@ -75,8 +75,8 @@ jobs:
 
         cat debian/changelog
 
-    # - name: Building AutoMySQLBackup
-    #   run: debuild -S -sa
+    - name: Building AutoMySQLBackup
+      run: debuild -S -sa
 
     - name: Publish to PPA
       run: ls ../
