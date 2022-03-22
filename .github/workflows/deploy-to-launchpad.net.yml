@@ -46,7 +46,7 @@ jobs:
 
         cat <<EOT >> debian/control
         Source: automysqlbackup
-        Maintainer: sixshop <sixshop@github.com>
+        Maintainer: sixhop <sixhop@github.com>
         Section: utils
         Priority: important
         Build-Depends: debhelper (>= 10)
@@ -54,7 +54,7 @@ jobs:
 
         Package: automysqlbackup
         Architecture: any
-        Homepage: https://github.com/sixshop/automysqlbackup
+        Homepage: https://github.com/sixhop/automysqlbackup
         Description: A fork and further development of AutoMySQLBackup from sourceforge.
         EOT
 
