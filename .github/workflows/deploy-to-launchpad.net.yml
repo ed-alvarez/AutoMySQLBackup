@@ -39,17 +39,15 @@ jobs:
         mkdir debian
         mkdir debian/source
 
-        touch debian/postinst
+        touch debian/install debian/preinst
 
         echo "3.0 (native)" >> debian/source/format
         echo "10" >> debian/compat
+        echo "mkdir -p /etc/automysqlbackup" >> debian/preinst
 
-        cat <<EOT >> debian/postinst
-        \#!/usr/bin/env bash
-
-        mkdir -p /etc/automysqlbackup
-        cp -n ../automysqlbackup.conf /etc/automysqlbackup/
-        cp ../automysqlbackup /usr/bin/automysqlbackup
+        cat <<EOT >> debian/install
+        automysqlbackup usr/bin
+        automysqlbackup.conf etc/automysqlbackup
         EOT
 
         cat <<EOT >> debian/control
