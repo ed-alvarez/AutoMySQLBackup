@@ -39,14 +39,22 @@ jobs:
         mkdir debian
         mkdir debian/source
 
-        cp install.sh debian/postinst
+        touch debian/postinst
 
         echo "3.0 (native)" >> debian/source/format
         echo "10" >> debian/compat
 
+        cat <<EOT >> debian/postinst
+        \#!/usr/bin/env bash
+
+        mkdir -p /etc/automysqlbackup
+        cp -n ../automysqlbackup.conf /etc/automysqlbackup/
+        cp ../automysqlbackup /usr/bin/automysqlbackup
+        EOT
+
         cat <<EOT >> debian/control
         Source: automysqlbackup
-        Maintainer: sixhop <sixhop@github.com>
+        Maintainer: ${{ secrets.GPG_OWNER }} 
         Section: utils
         Priority: important
         Build-Depends: debhelper (>= 10)
